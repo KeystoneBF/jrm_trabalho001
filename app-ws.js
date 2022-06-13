@@ -1,6 +1,9 @@
 const WebSocket = require('ws');
+const uuid = require('uuid');
 
 let clients = [];
+let chat_rooms = new Map();
+let waiting_queue = [];
  
 function onError(ws, err) {
     console.error(`onError: ${err.message}`);
@@ -9,12 +12,54 @@ function onError(ws, err) {
 function onMessage(ws, data) {
     console.log(`onMessage: ${data}`);
     const json = JSON.parse(data);
+
+    if (json.type == 'findLobby') {
+        waiting_queue.push(ws);
+        if(waiting_queue.length >= 2){
+            let id  = uuid.v4();
+            chat_rooms.set(id, {
+                player1: {
+                    websocket: waiting_queue.shift()
+                },
+                player2: {
+                    websocket: waiting_queue.shift()
+                }
+            })
+            chat_rooms.get(id).player1.websocket.send(JSON.stringify({
+                type: 'chatStart',
+                chatId: String(id)
+            }))
+            chat_rooms.get(id).player2.websocket.send(JSON.stringify({
+                type: 'chatStart',
+                chatId: String(id)
+            }))
+        } else {
+            ws.send(JSON.stringify({
+                type: 'lobbyWaiting',
+                data: 'Aguardando outra pessoa'
+            }))
+        }
+    } else if (json.type == 'message'){
+        chat_rooms.get(json.chatId).player1.websocket.send(JSON.stringify({
+            type: 'broadcast',
+            username: json.username,
+            message: json.message
+        }));
+        chat_rooms.get(json.chatId).player2.websocket.send(JSON.stringify({
+            type: 'broadcast',
+            username: json.username,
+            message: json.message
+        }));
+    }
+
     ws.send(JSON.stringify({
         type: 'confirmation',
         data: 'Recebido'
     }));
-    console.log('streaming to', clients.length, 'clients');
+
     
+    //console.log('streaming to', clients.length, 'clients');
+    /*
     for (const client of clients) {
         console.log('envio?', data.toString());
         client.send(JSON.stringify({
@@ -23,6 +68,7 @@ function onMessage(ws, data) {
             message: json.message
         }));
     }
+    */
 }
 
 function onClose(ws, reasonCode, description) {

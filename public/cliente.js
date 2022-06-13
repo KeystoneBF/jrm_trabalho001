@@ -2,6 +2,7 @@ const ws = new WebSocket("ws://" + location.host);
 let msg;
 let chat;
 let username; // nome do usuário
+let myChat;
 
 ws.onmessage = (event) => {        
     console.log(event.data);
@@ -29,6 +30,8 @@ ws.onmessage = (event) => {
         divMensagemLinha.appendChild(divMensagemConteudo);
         
         chat.appendChild(divMensagemLinha);        
+    } else if(json.type == 'chatStart'){
+        myChat = json.chatId
     }
 }
 
@@ -51,6 +54,7 @@ function send() {
     // Envia o texto digitado para o servidor pelo WebSocket (Um objeto convertido para string)
     ws.send(JSON.stringify({
         type: 'message', 
+        chatId: myChat,
         username: username.value,
         message: msg.value
     }));
@@ -59,6 +63,12 @@ function send() {
     msg.value = '';
     // foca no campo de texto da mensagem para digitar a próxima
     msg.focus();
+}
+
+function findLobby(){
+    ws.send(JSON.stringify({
+        type: 'findLobby'
+    }));
 }
 
 // Função para enviar mensagem que é executada quando se aperta Enter no campo de texto da mensagem
