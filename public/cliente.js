@@ -78,6 +78,29 @@ function pressionouTecla(event) {
     }
 }
 
+function gerarTabuleiro(){
+    var tab = document.getElementById('tabuleiro')
+    for (let linha = 0; linha < 10; linha++) {
+        var current_row = document.createElement('div')
+        current_row.setAttribute('class','row')
+        for (let coluna = 0; coluna < 10; coluna++) {
+            var current_cell = document.createElement('div')
+            current_cell.setAttribute('class','cell')
+            current_cell.setAttribute('onClick', `atirar(${linha}, ${coluna})`)
+            current_row.appendChild(current_cell)
+        }
+        tab.appendChild(current_row)
+    }
+}
+
+function atirar(x, y){
+    alert(`Atirou na posição [${x}, ${y}]!`)
+    var cells = document.getElementsByClassName('cell')
+    var cell = cells[x*10+y]
+    cell.style.background = '#529086';
+    console.log(cells)
+}
+
 window.addEventListener('load', (e) => {
     console.log('load')
     username = document.getElementById('username');

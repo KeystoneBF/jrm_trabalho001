@@ -1,0 +1,45 @@
+body{
+    background: lightblue;
+}
+        
+.mensagem-usuario {
+    border: 2px solid darkcyan;
+    border-radius: 0.5em;
+    background-color: lightgreen;
+    margin-bottom: 10px;
+    padding: 3px;
+    float: right;
+    clear: both;
+}
+
+.mensagem-outro {
+    border: 2px solid lightgray;
+    border-radius: 0.5em;
+    background-color: azure;
+    margin-bottom: 10px;
+    padding: 3px;
+    float: left;
+    clear: both;
+}
+
+#chat {
+    clear: both;
+}
+
+.nome-pessoa {
+    font-weight: bold;   
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
+    width: 236px;
+    margin: auto;
+}
+
+.cell {
+    background: rgb(82, 197, 159);
+    width: 20px;
+    height: 20px;
+}

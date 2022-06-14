@@ -8,48 +8,17 @@
     <title>WS Client</title>
 
     <!-- Estilos para os elementos do HTML -->
-    <style>
-        body
-        {
-            background: lightblue;
-        }
-        
-        .mensagem-usuario {
-            border: 2px solid darkcyan;
-            border-radius: 0.5em;
-            background-color: lightgreen;
-            margin-bottom: 10px;
-            padding: 3px;
-            float: right;
-            clear: both;
-        }
-        .mensagem-outro {
-            border: 2px solid lightgray;
-            border-radius: 0.5em;
-            background-color: azure;
-            margin-bottom: 10px;
-            padding: 3px;
-            float: left;
-            clear: both;
-        }
+    <link rel="stylesheet" href="style.css">
 
-        #chat {
-            clear: both;
-        }
+    <!-- Script -->
+    <script src="cliente.js"></script>
 
-        .nome-pessoa {
-            font-weight: bold;   
-        }
-    </style>
-
-    <script src="/cliente.js">
-        
-        
-    </script>
 </head>
-<body>
+<body onload="gerarTabuleiro()">
     <h1>Batalha naval</h1>
-
+    <div id="tabuleiro">
+        
+    </div>
     <div id="chat">
         
     </div>
