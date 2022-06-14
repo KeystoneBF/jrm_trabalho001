@@ -14,11 +14,33 @@
     <script src="cliente.js"></script>
 
 </head>
-<body onload="gerarTabuleiro()">
+<body onload="generateBoard()">
     <h1>Batalha naval</h1>
-    <div id="tabuleiro">
-        
+    <div class="row">
+        <div id="myBoard">
+            Minha esquadra
+            
+        </div>
+        <div id="foeBoard">
+            Esquadra do adversário
+            
+        </div>
     </div>
+    <div id="form">
+        <p id="instruction"></p>
+
+    </div>
+    <!--
+    <div>
+        Minha esquadra:
+        <p>Porta-aviões: 1</p>
+        <p>Encouraçados: 2</p>
+        <p>Hidroaviões: 3</p>
+        <p>Submarinos: 4</p>
+        <p>Cruzadores: 3</p>
+    </div>
+    -->
+    <!--
     <div id="chat">
         
     </div>
@@ -29,6 +51,7 @@
             Enviar mensagem
         </button>
     </div>
+    -->
     <div>
         <button onClick="findLobby()">
             Buscar sala

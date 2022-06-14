@@ -2,7 +2,8 @@ const ws = new WebSocket("ws://" + location.host);
 let msg;
 let chat;
 let username; // nome do usuário
-let myChat;
+let myChat; //id da partida do usuário
+let myId; //id do usuario
 
 ws.onmessage = (event) => {        
     console.log(event.data);
@@ -30,8 +31,15 @@ ws.onmessage = (event) => {
         divMensagemLinha.appendChild(divMensagemConteudo);
         
         chat.appendChild(divMensagemLinha);        
-    } else if(json.type == 'chatStart'){
-        myChat = json.chatId
+    } else if (json.type == 'lobbyWaiting') {
+        alert('Aguardando outro jogador!')
+    } else if (json.type == 'gameStart') {
+        myMatch = json.matchId
+        myId = json.playerId
+        alert('Game start!')
+    } else if (json.type == 'bombed') {
+        alert(`Bombardeado na posição [${json.posX}, ${json.posY}]!`)
+        markBoard(json.posX, json.posY, 'my-cell')
     }
 }
 
@@ -54,7 +62,7 @@ function send() {
     // Envia o texto digitado para o servidor pelo WebSocket (Um objeto convertido para string)
     ws.send(JSON.stringify({
         type: 'message', 
-        chatId: myChat,
+        matchId: myMatch,
         username: username.value,
         message: msg.value
     }));
@@ -78,27 +86,58 @@ function pressionouTecla(event) {
     }
 }
 
-function gerarTabuleiro(){
-    var tab = document.getElementById('tabuleiro')
-    for (let linha = 0; linha < 10; linha++) {
-        var current_row = document.createElement('div')
-        current_row.setAttribute('class','row')
-        for (let coluna = 0; coluna < 10; coluna++) {
-            var current_cell = document.createElement('div')
-            current_cell.setAttribute('class','cell')
-            current_cell.setAttribute('onClick', `atirar(${linha}, ${coluna})`)
-            current_row.appendChild(current_cell)
+function generateBoard(){
+    var myBoard = document.getElementById('myBoard')
+    var foeBoard = document.getElementById('foeBoard')
+    for (let index = 0; index < 2; index++) {
+        for (let row = 0; row < 10; row++) {
+            var current_row = document.createElement('div')
+            current_row.setAttribute('class','board-row')
+            for (let col = 0; col < 10; col++) {
+                var current_cell = document.createElement('div')
+                if(index == 0){
+                    current_cell.setAttribute('class','my-cell')
+                } else {
+                    current_cell.setAttribute('class','foe-cell')
+                    current_cell.setAttribute('onClick', `shoot(${row}, ${col})`)
+                }
+                current_row.appendChild(current_cell)
+            }
+            if(index == 0){
+                myBoard.appendChild(current_row)
+            } else {
+                foeBoard.appendChild(current_row)
+            }
         }
-        tab.appendChild(current_row)
     }
 }
 
-function atirar(x, y){
+function shoot(x, y){
     alert(`Atirou na posição [${x}, ${y}]!`)
-    var cells = document.getElementsByClassName('cell')
+    markBoard(x, y, 'foe-cell')
+
+    ws.send(JSON.stringify({
+        type: 'shoot', 
+        matchId: myMatch,
+        playerId: myId,
+        posX: x,
+        posY: y
+    }));
+}
+
+function markBoard(x, y, typeCell){
+    var cells = document.getElementsByClassName(typeCell)
     var cell = cells[x*10+y]
     cell.style.background = '#529086';
-    console.log(cells)
+}
+
+function colocarBarcos(){
+    var form = document.getElementById('form')
+    var instruction = document.getElementById('instruction')
+    instruction.innerText = "Coloque as posições do porta-aviões"
+    for (let index = 0; index < 5; index++) {
+        var current_field = document.createElement('input')
+    }
 }
 
 window.addEventListener('load', (e) => {

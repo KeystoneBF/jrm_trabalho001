@@ -34,11 +34,25 @@ body{
     display: flex;
     justify-content: space-between;
     padding: 2px;
+    width: 600px;
+    margin: auto;
+}
+
+.board-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
     width: 236px;
     margin: auto;
 }
 
-.cell {
+.my-cell {
+    background: rgb(82, 197, 159);
+    width: 20px;
+    height: 20px;
+}
+
+.foe-cell {
     background: rgb(82, 197, 159);
     width: 20px;
     height: 20px;

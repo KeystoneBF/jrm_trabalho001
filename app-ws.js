@@ -1,8 +1,11 @@
 const WebSocket = require('ws');
 const uuid = require('uuid');
+const SITUACAO_NOVA = 0;
+const SITUACAO_ANDAMENTO = 1;
+const SITUACAO_FINALIZADA = 2;
 
 let clients = [];
-let chat_rooms = new Map();
+let game_matches = new Map();
 let waiting_queue = [];
  
 function onError(ws, err) {
@@ -17,39 +20,59 @@ function onMessage(ws, data) {
         waiting_queue.push(ws);
         if(waiting_queue.length >= 2){
             let id  = uuid.v4();
-            chat_rooms.set(id, {
+            game_matches.set(id, {
                 player1: {
                     websocket: waiting_queue.shift()
                 },
                 player2: {
                     websocket: waiting_queue.shift()
-                }
+                },
+                status: SITUACAO_NOVA,
+	            winner: -1,
+	            turn: 1
             })
-            chat_rooms.get(id).player1.websocket.send(JSON.stringify({
-                type: 'chatStart',
-                chatId: String(id)
+            game_matches.get(id).player1.websocket.send(JSON.stringify({
+                type: 'gameStart',
+                matchId: String(id),
+                playerId: 1
             }))
-            chat_rooms.get(id).player2.websocket.send(JSON.stringify({
-                type: 'chatStart',
-                chatId: String(id)
+            game_matches.get(id).player2.websocket.send(JSON.stringify({
+                type: 'gameStart',
+                matchId: String(id),
+                playerId: 2
             }))
         } else {
             ws.send(JSON.stringify({
                 type: 'lobbyWaiting',
-                data: 'Aguardando outra pessoa'
             }))
         }
     } else if (json.type == 'message'){
-        chat_rooms.get(json.chatId).player1.websocket.send(JSON.stringify({
+        game_matches.get(json.matchId).player1.websocket.send(JSON.stringify({
             type: 'broadcast',
             username: json.username,
             message: json.message
         }));
-        chat_rooms.get(json.chatId).player2.websocket.send(JSON.stringify({
+        game_matches.get(json.matchId).player2.websocket.send(JSON.stringify({
             type: 'broadcast',
             username: json.username,
             message: json.message
         }));
+    } else if (json.type == 'shoot'){
+        //if(game_matches.get(json.matchId).turn == json.playerId){
+            if(json.playerId == 1){
+                game_matches.get(json.matchId).player2.websocket.send(JSON.stringify({
+                    type: 'bombed',
+                    posX: json.posX,
+                    posY: json.posY
+                }));
+            } else {
+                game_matches.get(json.matchId).player1.websocket.send(JSON.stringify({
+                    type: 'bombed',
+                    posX: json.posX,
+                    posY: json.posY
+                }));
+            }
+        //}
     }
 
     ws.send(JSON.stringify({
