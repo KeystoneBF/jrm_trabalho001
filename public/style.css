@@ -1,3 +1,7 @@
+header {
+    text-align: center;
+}
+
 body{
     background: lightblue;
 }
@@ -44,6 +48,12 @@ body{
     padding: 2px;
     width: 236px;
     margin: auto;
+}
+
+.cell {
+    background: rgb(82, 197, 159);
+    width: 20px;
+    height: 20px;
 }
 
 .my-cell {

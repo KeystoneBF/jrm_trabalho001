@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const uuid = require('uuid');
-const SITUACAO_NOVA = 0;
+
 const SITUACAO_ANDAMENTO = 1;
 const SITUACAO_FINALIZADA = 2;
 
@@ -28,13 +28,17 @@ function onMessage(ws, data) {
             game_matches.set(id, {
                 player1: {
                     username: user1.name,
-                    websocket: user1.websocket
+                    websocket: user1.websocket,
+                    myBoard: [],
+                    foeBoard: []
                 },
                 player2: {
                     username: user2.name,
-                    websocket: user2.websocket
+                    websocket: user2.websocket,
+                    myBoard: [],
+                    foeBoard: []
                 },
-                status: SITUACAO_NOVA,
+                status: SITUACAO_ANDAMENTO,
 	            winner: -1,
 	            turn: 1
             })
