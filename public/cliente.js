@@ -162,63 +162,98 @@ function verifyPos(targerS)              //Verificar oq acerto prov vai ficar de
         return `A`
         case`1`:
         alert(`BOOM!`)
-        //reduceHP(1)
+        reduceHP(B1)
         return `X`
         case`2`:
         alert(`BOOM!`)
-        //reduceHP(2)
+        reduceHP(B2)
         return `X`
         case`3`:
         alert(`BOOM!`)
-        //reduceHP(3)
+        reduceHP(B3)
         return `X`
         case`4`:
         alert(`BOOM!`)
-        //reduceHP(4)
+        reduceHP(B4)
         return `X`
         case`5`:
         alert(`BOOM!`)
-        //reduceHP(5)
+        reduceHP(B5)
         return `X`
         case`6`:
         alert(`BOOM!`)
-        //reduceHP(6)
+        reduceHP(B6)
         return `X`
         case`7`:
         alert(`BOOM!`)
-        //reduceHP(7)
+        reduceHP(B7)
         return `X`
         case`8`:
         alert(`BOOM!`)
-        //reduceHP8)
+        reduceHP(B8)
         return `X`
         case`9`:
         alert(`BOOM!`)
-        //reduceHP(9)
+        reduceHP(B9)
         return `X`
         case`10`:
         alert(`BOOM!`)
-        //reduceHP(10)
+        reduceHP(B10)
         return `X`
         case`11`:
         alert(`BOOM!`)
-        //reduceHP(11)
+        reduceHP(B11)
         return `X`
         case`12`:
         alert(`BOOM!`)
-        //reduceHP(12)
+        reduceHP(B12)
         return `X`
         case`13`:
         alert(`BOOM!`)
-        //reduceHP(13)
+        reduceHP(B13)
         return `X`
         //ADICIONAR CASO DE ACERTAR LOCAL JA MARCADO COM X OU A? OU BLOQUEAR DISSO ACONTECER?
     }
 }
 
-function reduceHP(shipID)  //se iniciar todos os barcos como B+numero talvez de pra evitar outro switch
+function reduceHP(shipID)  //diminui vida do barco e checa se afundou
 {
-//  var bAcertado=B+shipID
+    let y = 0
+    let z = 0
+    for(let x = 0;x < shipID.lenght; x++)
+    {
+        if(shipID[x] == `1` && y == 0)
+        {
+            shipID[x] = `0`
+            y = 1
+        }
+        else if(shipID[x] == `1` && y == 1)
+        {
+            z = 1
+        }
+    }
+    if(y == 1 && z==0)
+    {
+        sinkShip(shipID.lenght)
+    }
+}
+
+function sinkShip(tamBarco) //manda mensagem de qual barco afundou
+{
+    switch(tamBarco)
+    {
+        case`5`:
+        alert(`Voce afundou o Porta-aviões!`)
+        break
+        case`4`:
+        alert(`Voce afundou um Encouradouro!`)
+        case`3`:
+        alert(`Voce afundou um Hidro Hidroavião!`)
+        case`2`:
+        alert(`Voce afundou um Hidro Cruzador!`)
+        case`1`:
+        alert(`Voce afundou um submarino!`)
+    }
 }
 
 function markBoard(x, y, typeCell){
