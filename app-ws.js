@@ -17,27 +17,38 @@ function onMessage(ws, data) {
     const json = JSON.parse(data);
 
     if (json.type == 'findLobby') {
-        waiting_queue.push(ws);
+        waiting_queue.push({
+            name: json.username,
+            websocket: ws
+        });
         if(waiting_queue.length >= 2){
+            var user1 = waiting_queue.shift()
+            var user2 = waiting_queue.shift()
             let id  = uuid.v4();
             game_matches.set(id, {
                 player1: {
-                    websocket: waiting_queue.shift()
+                    username: user1.name,
+                    websocket: user1.websocket
                 },
                 player2: {
-                    websocket: waiting_queue.shift()
+                    username: user2.name,
+                    websocket: user2.websocket
                 },
                 status: SITUACAO_NOVA,
 	            winner: -1,
 	            turn: 1
             })
+            console.log(`Nome do player1: ${game_matches.get(id).player1.username}`)
+            console.log(`Nome do player1: ${game_matches.get(id).player2.username}`)
             game_matches.get(id).player1.websocket.send(JSON.stringify({
                 type: 'gameStart',
+                foe: game_matches.get(id).player2.username,
                 matchId: String(id),
                 playerId: 1
             }))
             game_matches.get(id).player2.websocket.send(JSON.stringify({
                 type: 'gameStart',
+                foe: game_matches.get(id).player1.username,
                 matchId: String(id),
                 playerId: 2
             }))

@@ -2,7 +2,8 @@ const ws = new WebSocket("ws://" + location.host);
 let msg;
 let chat;
 let username; // nome do usuário
-let myChat; //id da partida do usuário
+let foe_username; // nome do oponente
+let myMatch; //id da partida do usuário
 let myId; //id do usuario
 
 ws.onmessage = (event) => {        
@@ -36,6 +37,10 @@ ws.onmessage = (event) => {
     } else if (json.type == 'gameStart') {
         myMatch = json.matchId
         myId = json.playerId
+
+        var fbt = document.getElementById('foeBoardTitle')
+        foe_username = json.foe
+        fbt.innerHTML += `: <strong>${foe_username}</strong>`
         alert('Game start!')
     } else if (json.type == 'bombed') {
         alert(`Bombardeado na posição [${json.posX}, ${json.posY}]!`)
@@ -74,8 +79,16 @@ function send() {
 }
 
 function findLobby(){
+    // verifica se o campo de texto da mensagem está vazio
+    if (username.value == "") {
+        alert("Por favor, digite um nome de usuário!");
+        username.focus();
+        return;
+    }
+
     ws.send(JSON.stringify({
-        type: 'findLobby'
+        type: 'findLobby',
+        username: username.value
     }));
 }
 
