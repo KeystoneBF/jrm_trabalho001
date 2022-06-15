@@ -5,26 +5,6 @@ header {
 body{
     background: lightblue;
 }
-        
-.mensagem-usuario {
-    border: 2px solid darkcyan;
-    border-radius: 0.5em;
-    background-color: lightgreen;
-    margin-bottom: 10px;
-    padding: 3px;
-    float: right;
-    clear: both;
-}
-
-.mensagem-outro {
-    border: 2px solid lightgray;
-    border-radius: 0.5em;
-    background-color: azure;
-    margin-bottom: 10px;
-    padding: 3px;
-    float: left;
-    clear: both;
-}
 
 #chat {
     clear: both;

@@ -44,8 +44,6 @@ function onMessage(ws, data) {
                 winner: -1,
                 turn: 1
             })
-            console.log(`Nome do player1: ${game_matches.get(id).player1.username}`)
-            console.log(`Nome do player1: ${game_matches.get(id).player2.username}`)
             game_matches.get(id).player1.websocket.send(JSON.stringify({
                 type: 'gameStart',
                 foe: game_matches.get(id).player2.username,
@@ -63,17 +61,6 @@ function onMessage(ws, data) {
                 type: 'lobbyWaiting',
             }))
         }
-    } else if (json.type == 'message') {
-        game_matches.get(json.matchId).player1.websocket.send(JSON.stringify({
-            type: 'broadcast',
-            username: json.username,
-            message: json.message
-        }));
-        game_matches.get(json.matchId).player2.websocket.send(JSON.stringify({
-            type: 'broadcast',
-            username: json.username,
-            message: json.message
-        }));
     } else if (json.type == 'shoot') {
         //if(game_matches.get(json.matchId).turn == json.playerId){
         if (json.playerId == 1) {
@@ -108,24 +95,6 @@ function onMessage(ws, data) {
             }))
         }
     }
-
-    ws.send(JSON.stringify({
-        type: 'confirmation',
-        data: 'Recebido'
-    }));
-
-
-    //console.log('streaming to', clients.length, 'clients');
-    /*
-    for (const client of clients) {
-        console.log('envio?', data.toString());
-        client.send(JSON.stringify({
-            type: 'broadcast',
-            username: json.username,
-            message: json.message
-        }));
-    }
-    */
 }
 
 function onClose(ws, reasonCode, description) {
