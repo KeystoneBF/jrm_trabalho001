@@ -28,29 +28,7 @@ ws.onmessage = (event) => {
     console.log(event.data);
     const json = JSON.parse(event.data);
     console.log('json', json);
-    if (json.type == 'broadcast') {
-        // cria a mensagem na tela.
-        const divMensagemLinha = document.createElement("DIV");
-        const divMensagemNomePessoa = document.createElement("DIV");
-        const divMensagemConteudo = document.createElement("DIV");
-
-        divMensagemNomePessoa.className = "nome-pessoa";
-
-        if (json.username == username.value) {
-            divMensagemLinha.className = "mensagem-usuario";
-            divMensagemNomePessoa.innerHTML = "Você: ";
-        } else {
-            divMensagemLinha.className = "mensagem-outro";
-            divMensagemNomePessoa.innerHTML = `${json.username}: `;
-        }
-
-        divMensagemConteudo.innerHTML = json.message;
-
-        divMensagemLinha.appendChild(divMensagemNomePessoa);
-        divMensagemLinha.appendChild(divMensagemConteudo);
-
-        chat.appendChild(divMensagemLinha);
-    } else if (json.type == 'lobbyWaiting') {
+    if (json.type == 'lobbyWaiting') {
         alert('Aguardando outro jogador!')
         but.innerText = 'Aguardando outro jogador'
         but.removeAttribute('onClick')
@@ -66,6 +44,10 @@ ws.onmessage = (event) => {
     } else if (json.type == 'bombed') {
         alert(`Bombardeado na posição [${json.posX}, ${json.posY}]!`)
         markBoard(json.posX, json.posY, 'my-cell')
+    } else if (json.type == 'phase2'){
+        var confirmButton = document.getElementById('confirmButton')
+        confirmButton.remove()
+        generateBoards()
     }
 }
 
@@ -238,6 +220,7 @@ function placeShip(x, y){
         instruction.innerHTML = '<strong>Todos os barcos foram colocados<strong>'
         var confirmButton = document.createElement('button')
         confirmButton.setAttribute('onClick', 'finishPlacement()')
+        confirmButton.setAttribute('id', 'confirmButton')
         confirmButton.innerHTML = 'Confirmar'
         confirmField.appendChild(confirmButton)
     } else {
@@ -248,7 +231,15 @@ function placeShip(x, y){
 function finishPlacement(){
     var board = document.getElementById('planningBoard')
     board.innerHTML = ''
-    generateBoards()
+
+    var confirmButton = document.getElementById('confirmButton')
+    confirmButton.innerText = 'Aguardando confirmação do oponente...'
+    
+    ws.send(JSON.stringify({
+        type: 'waitFoe',
+        matchId: myMatch,
+        playerId: myId
+    }));
 }
 
 function shoot(x, y) {
@@ -354,11 +345,11 @@ function sinkShip(tamBarco) //manda mensagem de qual barco afundou
         case `4`:
             alert(`Voce afundou um Encouraçado!`)
         case `3`:
-            alert(`Voce afundou um Hidro Hidroavião!`)
+            alert(`Voce afundou um Hidroavião!`)
         case `2`:
-            alert(`Voce afundou um Hidro Cruzador!`)
+            alert(`Voce afundou um Cruzador!`)
         case `1`:
-            alert(`Voce afundou um submarino!`)
+            alert(`Voce afundou um Sbmarino!`)
     }
 }
 
