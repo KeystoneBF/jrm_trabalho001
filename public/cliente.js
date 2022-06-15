@@ -2,6 +2,7 @@ const ws = new WebSocket("ws://" + location.host);
 let msg;
 let chat;
 let instruction;
+let but; //botão de buscar partida
 let confirmField;
 let username; // nome do usuário
 let foe_username; // nome do oponente
@@ -51,12 +52,15 @@ ws.onmessage = (event) => {
         chat.appendChild(divMensagemLinha);
     } else if (json.type == 'lobbyWaiting') {
         alert('Aguardando outro jogador!')
+        but.innerText = 'Aguardando outro jogador'
+        but.removeAttribute('onClick')
     } else if (json.type == 'gameStart') {
         myMatch = json.matchId
         myId = json.playerId
         foe_username = json.foe
 
         alert('Game start!')
+        but.remove()
         planningBoard()
         instruction.innerHTML = '<strong>Posicione o porta-aviões!<strong>'
     } else if (json.type == 'bombed') {
@@ -375,5 +379,6 @@ window.addEventListener('load', (e) => {
     chat = document.getElementById('chat');
     instruction = document.getElementById('instruction');
     confirmField = document.getElementById('confirmField');
+    but = document.getElementById('find')
 });
 
